@@ -25,15 +25,15 @@ def viz_per_time_period(df, time_period, period_list):
 
     fig, ax4 = plt.subplots(figsize=(14, 4))
     # Plot the first chart
-    ax4.plot(period_by_collision.index, period_by_collision.iloc[:,0], color='#F29775',label='Injured per collision')
-    ax4.set_xlabel('Weekdays')
+    ax4.plot(period_by_collision.index, period_by_collision.iloc[:,0], color='#F29775',label='Injured per collision',linewidth=3)
+    ax4.set_xlabel(time_period)
     ax4.set_ylabel('Injured per Collision')
     ax4.tick_params('y')
     # Create a second axes that shares the same x-axis
     ax5 = ax4.twinx()
     
     # Plot the second chart
-    ax5.plot(period_by_collision.index, period_by_collision.iloc[:,1],color='#F26C8A',label='Deaths per collision')
+    ax5.plot(period_by_collision.index, period_by_collision.iloc[:,1],color='#F26C8A',label='Deaths per collision',linewidth=3)
     ax5.set_ylabel('Deaths per Collision' )
     ax5.tick_params('y')
     
@@ -52,4 +52,16 @@ def viz_per_time_period(df, time_period, period_list):
     plt.title('Combined Plot')
     
     plt.show()
+
+
+def grouping_by_time_period(df, time_period, period_list):
+#weekdays_list=['Mon','Tue','Wed','Thu','Fri','Sat','Sun']
+    period_groupby=df.groupby(time_period)[['collision_id','number_of_persons_injured','number_of_persons_killed']].\
+                        agg({'collision_id':'count',
+                             'number_of_persons_injured':'sum',
+                             'number_of_persons_killed':'sum'
+                             
+                                                                        }).reindex(period_list)
+    period_groupby.columns=['num_collisions','num_victims','num_killed']
+    return period_groupby
     
